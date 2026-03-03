@@ -1,0 +1,63 @@
+
+
+dma_uart1_tx(string, strlen((char*)string));
+	_delay_ms(500);
+***********************************************
+
+	AHT_to_uart();
+***********************************************
+
+	sprintf(data_ds,"SRCH = %u \n\r",ds18_search());
+	usart1_send_str(data_ds);
+		_delay_ms(10);
+
+	sprintf(data_ds,"DS = %u \n\r",ds18_get() /16 );
+	usart1_send_str(data_ds);
+		_delay_ms(500);
+
+*******************************************************
+
+void GPIO()
+{
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; 
+	RCC->AHBENR |= RCC_AHBENR_GPIOBEN; 
+
+	GPIOA->MODER |= ( 0x01 << (5*2)); // 5 pin/ 01
+// PA output 0x10
+
+	GPIOB->MODER &= ~( 3 << (1*2));// 1 pin
+	GPIOB->PUPDR |= ( 1 << (1*2)); //1 pin / up 01
+// PB input 0x00
+
+	GPIOB->MODER |= ( 0x01 << (6*2)); // 5 pin/ 01
+	GPIOB->MODER |= ( 0x01 << (7*2)); // 5 pin/ 01
+
+}
+
+**********************************************
+
+		sprintf(data_ds, "ALRMAR=0x%08lX \r\n", RTC->ALRMAR);
+		usart1_send_str(data_ds);
+			_delay_ms(500);
+
+
+
+**********************************************
+
+CLEAR_BIT(GPIOA->ODR, 1<<0);
+READ_BIT(GPIOA->IDR ,1<<0)==1) 
+
+
+
+
+*******************************************
+uint8_t start[3] = {0};
+
+if (ms_ticks - start[0] >= 1000)
+{
+
+
+start[0] = ms_ticks;
+}
+		
+

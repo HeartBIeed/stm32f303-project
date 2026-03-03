@@ -1,0 +1,4 @@
+timer.c:5:6:SysTick_init	8	static
+timer.c:16:6:SysTick_Handler	4	static
+timer.c:21:6:_delay_ms	24	static
+timer.c:28:6:_delay_us	16	static
