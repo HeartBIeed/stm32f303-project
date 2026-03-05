@@ -4,11 +4,11 @@ void ST7735_setPins(){
 
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; 
 
-	GPIOA->MODER &= ~((1 << (RST*2))|(1 << (AO*2))|(1 << (CS*2))); 
+	GPIOA->MODER &= ~((3 << (RST*2))|(3 << (AO*2))|(3 << (CS*2))); 
 	GPIOA->MODER |= ((1 << (RST*2))|(1 << (AO*2))|(1 << (CS*2))); // output
 
-	GPIOA->OSPEEDR &= ~((2 << (RST*2))|(2 << (AO*2))|(1 << (CS*2))); 
-	GPIOA->OSPEEDR |= ((2 << (RST*2))|(2 << (AO*2))|(1 << (CS*2))); //high
+	GPIOA->OSPEEDR &= ~((3 << (RST*2))|(3 << (AO*2))|(3 << (CS*2))); 
+	GPIOA->OSPEEDR |= ((3 << (RST*2))|(3 << (AO*2))|(3 << (CS*2))); //high
 
 	GPIOA->BSRR |= (1 << RST); 
 
@@ -68,7 +68,7 @@ void ST7735_init(){
 		_delay_ms(10);
 
 	ST7735_cmd(0x11);
-		_delay_ms(10);
+		_delay_ms(120);
 
 	ST7735_cmd(0x3A);
 	ST7735_data(0x05);
@@ -107,6 +107,7 @@ void ST7735_fill(uint16_t color){
 
 	}
 	
+	while(SPI1->SR & SPI_SR_BSY);
 	CS_high();
 
 }

@@ -32,10 +32,10 @@ void SPI1_init(){
 uint8_t SPI1_sendByte(uint8_t tx_data){
 
 	while (!(SPI1->SR & SPI_SR_TXE)); 
-	SPI1->DR = tx_data; 
+	*(volatile uint8_t*)&SPI1->DR = tx_data; 
 	while (!(SPI1->SR & SPI_SR_RXNE)); 
-	while (SPI1->SR & SPI_SR_BSY); 
- return SPI1->DR;
+//	while(SPI1->SR & SPI_SR_BSY);
+	return *(volatile uint8_t*)&SPI1->DR;
 }
 
 

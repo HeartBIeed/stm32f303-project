@@ -12,20 +12,18 @@ void gpio_init(){
 
 int main(void){
 
-SysTick_init();
 SystemClock_HSE_8MHz();
+SysTick_init();
+
 gpio_init();
 USART1_init(9600);
-
-USART1_sendStr("USART EN \n\r");
+	USART1_sendStr("USART EN \n\r");
 SPI1_init();
-USART1_sendStr("SPI INIT \n\r");
+	USART1_sendStr("SPI INIT \n\r");
 ST7735_init();
-USART1_sendStr("ST7735 INIT \n\r");
+	USART1_sendStr("ST7735 INIT \n\r");
 
 ST7735_fill(0xF800);
-
-
 
 uint32_t start[3] = {0};
 uint8_t led_state = 0;
@@ -33,7 +31,7 @@ uint8_t led_state = 0;
 
 
  while( 1 )
-	{
+{
 
 USART1_echo();
 
@@ -51,7 +49,7 @@ USART1_echo();
 	}
 
 
-	}
+}
 }
 
 
