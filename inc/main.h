@@ -16,6 +16,7 @@
 #include "timer.h"
 #include "uart.h"
 #include "spi.h"
+#include "st7735.h"
 
 
 

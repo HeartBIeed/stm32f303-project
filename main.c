@@ -20,21 +20,22 @@ USART1_init(9600);
 USART1_sendStr("USART EN \n\r");
 SPI1_init();
 USART1_sendStr("SPI INIT \n\r");
+ST7735_init();
+USART1_sendStr("ST7735 INIT \n\r");
+
+ST7735_fill(0xF800);
 
 
-uint8_t start[3] = {0};
+
+uint32_t start[3] = {0};
 uint8_t led_state = 0;
+
+
 
  while( 1 )
 	{
 
-SPI1_sendByte(0x55);
-		_delay_ms(10);
-
 USART1_echo();
-
-
-			
 
 	if (ms_ticks - start[0] >= 1000)
 	{

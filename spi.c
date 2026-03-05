@@ -9,7 +9,7 @@ void SPI1_init(){
 	GPIOA->MODER &= ~((3 << (PA4*2))|(3 << (PA5*2))|(3 << (PA6*2))|(3 << (PA7*2))); 
 	GPIOA->MODER |= ((2 << (PA4*2))|(2 << (PA5*2))|(2 << (PA6*2))|(2 << (PA7*2)));
 
-	GPIOA->OTYPER &= ~((3 << PA4)|(3 << PA5)|(3 << PA6)|(3 << PA7));
+	GPIOA->OTYPER &= ~((1 << PA4)|(1 << PA5)|(1 << PA6)|(1 << PA7));
 	GPIOA->OSPEEDR |= ((2 << (PA4*2))|(2 << (PA5*2))|(2 << (PA6*2))|(2 << (PA7*2))); //pa9/10 to  0b10
 
 	GPIOA->AFR[0] &= ~((0xF << (PA4*4))|(0xF << (PA5*4))|(0xF << (PA6*4))|(0xF << (PA7*4)));  
@@ -29,12 +29,13 @@ void SPI1_init(){
 
 }
 
-void SPI1_sendByte(uint8_t tx_data){
+uint8_t SPI1_sendByte(uint8_t tx_data){
 
-	while ((SPI1->SR & SPI_SR_TXE) == 0); 
+	while (!(SPI1->SR & SPI_SR_TXE)); 
 	SPI1->DR = tx_data; 
-	while ((SPI1->SR & SPI_SR_BSY)); 
-
+	while (!(SPI1->SR & SPI_SR_RXNE)); 
+	while (SPI1->SR & SPI_SR_BSY); 
+ return SPI1->DR;
 }
 
 

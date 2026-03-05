@@ -9,6 +9,6 @@
 #define PA7 7
 
 void SPI1_init();
-void SPI1_sendByte(uint8_t tx_data);
+uint8_t SPI1_sendByte(uint8_t tx_data);
 
 #endif /* SPI_H_ */
