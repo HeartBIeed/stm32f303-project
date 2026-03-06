@@ -21,7 +21,7 @@ void SPI1_init(){
 	SPI1->CR1 |= (1<<2); // Master
 	SPI1->CR1 |= (1<<9); // SSM Software slave management
 	SPI1->CR1 |= (1<<8); // SSI Internal slave select
-	SPI1->CR1 |= (2<<3); // baud rate f/8
+	SPI1->CR1 |= (1<<3); // baud rate f/4
 
 	SPI1->CR2 |= (7<<8); // Data size 8 bit
 
