@@ -33,6 +33,15 @@ uint8_t led_state = 0;
  while( 1 )
 {
 
+ST7735_fill(0xF800);
+		_delay_ms(1000);	
+
+ST7735_fill(0x07E0);
+		_delay_ms(1000);	
+
+ST7735_fill(0x001F);
+		_delay_ms(1000);	
+
 USART1_echo();
 
 	if (ms_ticks - start[0] >= 1000)

@@ -33,8 +33,8 @@ uint8_t SPI1_sendByte(uint8_t tx_data){
 
 	while (!(SPI1->SR & SPI_SR_TXE)); 
 	*(volatile uint8_t*)&SPI1->DR = tx_data; 
-	while (!(SPI1->SR & SPI_SR_RXNE)); 
-//	while(SPI1->SR & SPI_SR_BSY);
+//	while (!(SPI1->SR & SPI_SR_RXNE)); 
+	while(SPI1->SR & SPI_SR_BSY);
 	return *(volatile uint8_t*)&SPI1->DR;
 }
 
