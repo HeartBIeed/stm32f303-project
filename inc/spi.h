@@ -10,5 +10,6 @@
 
 void SPI1_init();
 uint8_t SPI1_sendByte(uint8_t tx_data);
+void ST7735_test();
 
 #endif /* SPI_H_ */

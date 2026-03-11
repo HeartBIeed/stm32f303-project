@@ -81,6 +81,51 @@ void ST7735_init(){
 
 }
 
+
+int ST7735_FillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) {
+
+
+
+  if((x >= 128) || (y >= 160)) return 0;
+  if(w <= 0 || h <= 0) return 0;
+
+  if(x + w >  128)  w = 128  - x;
+  if(y + h > 160) h = 160 - y;
+
+CS_low();
+
+	ST7735_cmd(0x2A);
+	ST7735_data(0);
+	ST7735_data(x);
+	ST7735_data(0);
+	ST7735_data(x+w-1);
+
+	ST7735_cmd(0x2B);
+	ST7735_data(0);
+	ST7735_data(y);
+	ST7735_data(0);
+	ST7735_data(y+h-1);
+
+	ST7735_cmd(0x2C);
+
+	AO_high();
+
+for(int16_t i=0; i<h; i++) {
+    for(int16_t j=0; j<w; j++) {
+
+	SPI1_sendByte(color >> 8);
+	SPI1_sendByte(color & 0xFF);
+
+    }
+  }
+
+ CS_high();
+ return 1;
+}
+
+
+
+
 void ST7735_fill(uint16_t color){
 	CS_low();
 
@@ -111,11 +156,5 @@ void ST7735_fill(uint16_t color){
 	CS_high();
 
 }
-
-
-
-
-
-
 
 

@@ -25,14 +25,12 @@ SPI1_init();
 	USART1_sendStr("SPI INIT \n\r");
 ST7735_init();
 	USART1_sendStr("ST7735 INIT \n\r");
+ST7735_fill(0xFFFF);
 
-ST7735_fill(0xF800);
 
 uint32_t start[3] = {0};
 uint8_t led_state = 0;
 uint8_t screen_state = 0;
-
-
 
  while( 1 )
 {
@@ -47,12 +45,13 @@ uint8_t screen_state = 0;
 
 		if (screen_state) 	
 		{
-			ST7735_fill(0xF800);
+		ST7735_FillRect(5,15, 20, 40, 0xF800);
 
 		} else {
-			ST7735_fill(0x07E0);
+		ST7735_FillRect(5,15, 60, 60, 0x00FF);
 		}
 	}
+
 
 
 
@@ -68,11 +67,6 @@ uint8_t screen_state = 0;
 			SET_BIT(GPIOC->ODR, 1<<13);
 		}
 	}
-
-			CLEAR_BIT(GPIOC->ODR, 1<<14);
-		_delay_us(10);
-			SET_BIT(GPIOC->ODR, 1<<14);
-		_delay_us(10);
 
 }
 }
