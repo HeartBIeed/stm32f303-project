@@ -25,17 +25,27 @@ SPI1_init();
 	USART1_sendStr("SPI INIT \n\r");
 ST7735_init();
 	USART1_sendStr("ST7735 INIT \n\r");
-ST7735_fill(0xFFFF);
+ST7735_FillRect(0,0, 128, 160, 0x0000);
 
 
 uint32_t start[3] = {0};
 uint8_t led_state = 0;
 uint8_t screen_state = 0;
 
+
+char text[256] = {"Lorem Ipsum is simply dummy text of the\
+ printing and typesetting industry. \
+ Lorem Ipsum has been the industry's \
+ standard dummy text ever since the 1500s, \
+ when an unknown printer took a galley of \
+ type and scrambled it to make a type specimen book. ))\0"};
+
+
  while( 1 )
 {
 
 	USART1_echo();
+	ST7735_DrawString(5,5, text, 0xFFFF);
 
 
 	if (ms_ticks - start[1] >= 1000)
@@ -45,10 +55,9 @@ uint8_t screen_state = 0;
 
 		if (screen_state) 	
 		{
-		ST7735_FillRect(5,15, 20, 40, 0xF800);
-
+		ST7735_FillRect(108,140, 20, 20, 0xF800);
 		} else {
-		ST7735_FillRect(5,15, 60, 60, 0x00FF);
+		ST7735_FillRect(108,140, 20, 20, 0x00FF);
 		}
 	}
 

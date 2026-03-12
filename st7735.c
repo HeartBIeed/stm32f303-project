@@ -15,11 +15,11 @@ void ST7735_setPins(){
 
 }
 
-void AO_high(){
+void DATA_mode(){
 	GPIOA->BSRR |= (1 << AO); 
 }
 
-void AO_low(){
+void CMD_mode(){
 	GPIOA->BSRR |= (1 << (AO+16)); 
 }
 
@@ -43,19 +43,14 @@ void ST7735_reset(){
 
 void ST7735_cmd(uint8_t cmd){
 
-	AO_low();
-
+	CMD_mode();
 	SPI1_sendByte(cmd);
-		_delay_us(5);
-
 }
 
 void ST7735_data(uint8_t data){
 
-	AO_high();
-
+	DATA_mode();
 	SPI1_sendByte(data);
-		_delay_us(5);
 }
 
 void ST7735_init(){
@@ -84,8 +79,6 @@ void ST7735_init(){
 
 int ST7735_FillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) {
 
-
-
   if((x >= 128) || (y >= 160)) return 0;
   if(w <= 0 || h <= 0) return 0;
 
@@ -108,7 +101,7 @@ CS_low();
 
 	ST7735_cmd(0x2C);
 
-	AO_high();
+	DATA_mode();
 
 for(int16_t i=0; i<h; i++) {
     for(int16_t j=0; j<w; j++) {
@@ -124,37 +117,75 @@ for(int16_t i=0; i<h; i++) {
 }
 
 
-
-
-void ST7735_fill(uint16_t color){
-	CS_low();
+void ST7735_SetRegion(uint16_t x, uint16_t y, uint16_t w, uint16_t h){
 
 	ST7735_cmd(0x2A);
 	ST7735_data(0);
+	ST7735_data(x);
 	ST7735_data(0);
-	ST7735_data(0);
-	ST7735_data(127);
+	ST7735_data(h);
 
 	ST7735_cmd(0x2B);
 	ST7735_data(0);
+	ST7735_data(y);
 	ST7735_data(0);
-	ST7735_data(0);
-	ST7735_data(159);
+	ST7735_data(w);
 
 	ST7735_cmd(0x2C);
 
-	AO_high();
-	
-	for (uint32_t i = 0; i < 128*160; ++i)
-	{
-		SPI1_sendByte(color >> 8);
-		SPI1_sendByte(color & 0xFF);
-
-	}
-	
-	while(SPI1->SR & SPI_SR_BSY);
-	CS_high();
-
 }
 
+
+
+int ST7735_DrawPixel(uint16_t x, uint16_t y, uint16_t color) {
+    if (x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT) return 0;
+    
+    // Отправка команды на установку области
+    ST7735_SetRegion(x, y, x, y);
+
+    	DATA_mode();
+		SPI1_sendByte(color >> 8);
+		SPI1_sendByte(color & 0xFF);
+	return 1;
+}
+
+
+void ST7735_DrawChar(uint16_t x, uint16_t y, char c, uint16_t color) {
+
+    const uint8_t* char_data = font8x8[(int)c];
+
+    // Проходим по всем 8 строкам
+    for (int row = 0; row < 8; row++) {
+        uint8_t row_data = char_data[row];
+            // Проходим по всем 8 стлбцам
+		for (int col = 0; col < 8; col++){
+
+			if (row_data & (0x80 >> col)){ //0x80 - 0b10000000
+             // Рисуем пиксель, если бит = 1
+             ST7735_DrawPixel(x + col, y + row, color);
+			} //end if
+		} //end for 2
+	} //end for 1	
+}
+
+void ST7735_DrawString(uint16_t x, uint16_t y, const char* str, uint16_t color) {
+CS_low();
+
+    uint16_t cursor_x = x;
+
+    while (*str) {
+
+        ST7735_DrawChar(cursor_x, y, *str, color);
+        cursor_x += 8;  // Ширина символа
+
+        // Проверка выхода за границу экрана
+        if (cursor_x + 8 > SCREEN_WIDTH) {
+            cursor_x = x;
+            y += 8;  // Переход на следующую строку
+        }
+
+     str++; 
+     }  //end while
+ CS_high(); 
+}
 
