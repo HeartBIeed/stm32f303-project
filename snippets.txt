@@ -61,3 +61,8 @@ start[0] = ms_ticks;
 }
 		
 
+**********************
+
+ uint32_t timeout = 10000;
+    while(!(RTC->ISR & RTC_ISR_RSF)) {
+        if(--timeout == 0) break; // Защита от зависания

@@ -1,7 +1,10 @@
 #include "main.h"
 
+uint8_t hour;
+uint8_t min;
+uint8_t sec;
 
-void gpio_init(){
+void GPIO_init(){
 
 	RCC->AHBENR |= RCC_AHBENR_GPIOCEN; 
 	GPIOC->MODER |= (1 << (13*2)); //PC13 / output 01
@@ -11,6 +14,43 @@ void gpio_init(){
 	GPIOC->PUPDR |= (1 << (14*2)); 
 }
 
+int USART_commands(){
+
+	if (strncmp((char*)usart_data_buffer,"st",2) == 0) 
+	{
+
+		char *command = strtok((char*)usart_data_buffer," ");
+		char *h_char = strtok(NULL, ",");
+		char *m_char = strtok(NULL, ",");
+
+		int h = atoi(h_char);
+		int m = atoi(m_char);
+
+		RTC_setTime(h,m);
+
+
+		char string[32];
+		sprintf(string, "SET TIME -> %2d:%2d \r\n",h,m);
+		USART1_sendStr(string);
+	 	usart_data_buffer[0] = '\0';
+
+	 		return 1;
+
+	} else {
+			return 0;
+	}
+		
+}
+
+void print_Time(){
+
+RTC_getTime(&hour,&min,&sec);
+char text[20]={"\0"};	
+sprintf(text, "TIME %02d:%02d:%02d \r\n",hour,min,sec);
+ST7735_DrawString(3,72, text, 0xFFFF);
+
+}
+
 
 int main(void){
 
@@ -18,35 +58,30 @@ PLL_72MHz_enable();
 //SystemClock_HSE_8MHz();
 SysTick_init();
 
-gpio_init();
+GPIO_init();
 USART1_init(9600);
 	USART1_sendStr("USART EN \n\r");
 SPI1_init();
 	USART1_sendStr("SPI INIT \n\r");
 ST7735_init();
 	USART1_sendStr("ST7735 INIT \n\r");
-ST7735_FillRect(0,0, 128, 160, 0x0000);
+
+	ST7735_FillRect(0,0, 128, 160, 0x0000);
+	ST7735_DrawString(3,3, "ST7735 INIT", 0xFFFF);
+
+RTC_init();
+	USART1_sendStr("RTC INIT \n\r");
+	ST7735_DrawString(3,17, "RTC INIT", 0xFFFF);
 
 
 uint32_t start[3] = {0};
 uint8_t led_state = 0;
 uint8_t screen_state = 0;
 
-
-char text[256] = {"Lorem Ipsum is simply dummy text of the\
- printing and typesetting industry. \
- Lorem Ipsum has been the industry's \
- standard dummy text ever since the 1500s, \
- when an unknown printer took a galley of \
- type and scrambled it to make a type specimen book. ))\0"};
-
-
- while( 1 )
+ while(1)
 {
-
+	USART_commands();
 	USART1_echo();
-	ST7735_DrawString(5,5, text, 0xFFFF);
-
 
 	if (ms_ticks - start[1] >= 1000)
 	{
@@ -55,9 +90,19 @@ char text[256] = {"Lorem Ipsum is simply dummy text of the\
 
 		if (screen_state) 	
 		{
+
 		ST7735_FillRect(108,140, 20, 20, 0xF800);
+
+		ST7735_FillRect(40,70, 80, 30, 0x0000);
+		print_Time();
+
 		} else {
+
 		ST7735_FillRect(108,140, 20, 20, 0x00FF);
+
+		ST7735_FillRect(40,70, 80, 30, 0x0000);
+		print_Time();
+
 		}
 	}
 

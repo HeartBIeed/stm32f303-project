@@ -17,7 +17,6 @@
 #include "uart.h"
 #include "spi.h"
 #include "st7735.h"
-
-
+#include "rtc.h"
 
 #endif /* MAIN_H_ */
