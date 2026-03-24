@@ -1,4 +1,2 @@
-main.c:7:6:GPIO_init	4	static
-main.c:17:5:USART_commands	64	static
-main.c:45:6:print_Time	40	static
-main.c:55:5:main	32	static
+main.c:3:6:GPIO_init	4	static
+main.c:14:5:main	72	static

@@ -18,5 +18,6 @@
 #include "spi.h"
 #include "st7735.h"
 #include "rtc.h"
+#include "adc.h"
 
 #endif /* MAIN_H_ */

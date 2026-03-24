@@ -1,5 +1,9 @@
 #include "rtc.h"
 
+volatile uint8_t hour;
+volatile uint8_t min;
+volatile uint8_t sec;
+
 void RTC_init(){
 	
 	RCC->APB1ENR |= (1<<28); // pwr en
@@ -70,6 +74,15 @@ void RTC_getTime(uint8_t *hour,uint8_t *min,uint8_t *sec){
 	*min =  ((tr>>12)&0x7)*10 + ((tr>>8)&0xF); // 0x7 read 3 bits
 	*sec =  ((tr>>4)&0x7)*10 + ((tr>>0)&0xF); // 0x7 read 3 bits
 											// 0xF read 4 bits
+}
+
+void print_Time(){
+
+RTC_getTime(&hour,&min,&sec);
+char text[20]={"\0"};	
+sprintf(text, "TIME %02d:%02d:%02d \r\n",hour,min,sec);
+ST7735_DrawString(3,72, text, 0xFFFF);
+
 }
 
 

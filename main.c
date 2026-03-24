@@ -1,9 +1,5 @@
 #include "main.h"
 
-uint8_t hour;
-uint8_t min;
-uint8_t sec;
-
 void GPIO_init(){
 
 	RCC->AHBENR |= RCC_AHBENR_GPIOCEN; 
@@ -12,43 +8,6 @@ void GPIO_init(){
 
 	GPIOC->MODER |= (1 << (14*2)); 
 	GPIOC->PUPDR |= (1 << (14*2)); 
-}
-
-int USART_commands(){
-
-	if (strncmp((char*)usart_data_buffer,"st",2) == 0) 
-	{
-
-		char *command = strtok((char*)usart_data_buffer," ");
-		char *h_char = strtok(NULL, ",");
-		char *m_char = strtok(NULL, ",");
-
-		int h = atoi(h_char);
-		int m = atoi(m_char);
-
-		RTC_setTime(h,m);
-
-
-		char string[32];
-		sprintf(string, "SET TIME -> %2d:%2d \r\n",h,m);
-		USART1_sendStr(string);
-	 	usart_data_buffer[0] = '\0';
-
-	 		return 1;
-
-	} else {
-			return 0;
-	}
-		
-}
-
-void print_Time(){
-
-RTC_getTime(&hour,&min,&sec);
-char text[20]={"\0"};	
-sprintf(text, "TIME %02d:%02d:%02d \r\n",hour,min,sec);
-ST7735_DrawString(3,72, text, 0xFFFF);
-
 }
 
 
@@ -73,15 +32,41 @@ RTC_init();
 	USART1_sendStr("RTC INIT \n\r");
 	ST7735_DrawString(3,17, "RTC INIT", 0xFFFF);
 
+ADC_init();
+	ST7735_DrawString(3,29, "ADC INIT", 0xFFFF);
+
 
 uint32_t start[3] = {0};
-uint8_t led_state = 0;
 uint8_t screen_state = 0;
 
  while(1)
 {
 	USART_commands();
 	USART1_echo();
+//	_delay_ms(300);
+
+
+
+
+
+	if (ms_ticks - start[2] >= 1000)
+	{
+	start[2] = ms_ticks;
+
+	ST7735_FillRect(0,82, 120, 40, 0x0000);
+
+	uint32_t data_adc = ADC_read()*3300/4095;
+	uint32_t data_temp = (data_adc - 907)/15;
+
+	char string[32];
+	sprintf(string, "ADC: %lu mV",data_adc);
+	ST7735_DrawString(3,82, string, 0xFFFF);
+
+	sprintf(string, "T: %lu *C",data_temp);
+	ST7735_DrawString(10,92, string, 0xFFFF);
+	}
+
+
 
 	if (ms_ticks - start[1] >= 1000)
 	{
@@ -91,16 +76,16 @@ uint8_t screen_state = 0;
 		if (screen_state) 	
 		{
 
-		ST7735_FillRect(108,140, 20, 20, 0xF800);
+		ST7735_FillRect(108,140, 20, 20, 0xF800); // red
 
-		ST7735_FillRect(40,70, 80, 30, 0x0000);
+		ST7735_FillRect(40,70, 80, 10, 0x0000); // clear time black 
 		print_Time();
 
 		} else {
 
-		ST7735_FillRect(108,140, 20, 20, 0x00FF);
+		ST7735_FillRect(108,140, 20, 20, 0x00FF); // blue
 
-		ST7735_FillRect(40,70, 80, 30, 0x0000);
+		ST7735_FillRect(40,70, 80, 10, 0x0000); // clear time black 
 		print_Time();
 
 		}
@@ -108,19 +93,12 @@ uint8_t screen_state = 0;
 
 
 
-
-	if (ms_ticks - start[0] >= 1000)
+if (ms_ticks - start[0] >= 1000) 
 	{
-	start[0] = ms_ticks;
-	led_state ^= 1;
-
-		if (led_state) 	
-		{
-			CLEAR_BIT(GPIOC->ODR, 1<<13);
-		} else {
-			SET_BIT(GPIOC->ODR, 1<<13);
-		}
+		GPIOC->ODR ^= (1 << 13);
+		start[0] = ms_ticks;
 	}
+
 
 }
 }
