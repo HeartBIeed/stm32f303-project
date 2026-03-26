@@ -10,7 +10,7 @@
 #define PB6 6
 #define PB7 7
 
-void Encoder_Init();
+void Encoder_init();
 int32_t Encoder_Get_TIM4();
 
 #endif /* ENC_H_ */

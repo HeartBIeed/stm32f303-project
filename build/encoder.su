@@ -1,2 +1,2 @@
-encoder.c:7:6:Encoder_Init	4	static
+encoder.c:7:6:Encoder_init	4	static
 encoder.c:44:9:Encoder_Get_TIM4	4	static

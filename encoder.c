@@ -4,7 +4,7 @@
 //PB7 TIM4_CH2 
 //ALT F NO2
 
-void Encoder_Init(){
+void Encoder_init(){
 
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN; 
 	RCC->AHBENR |= (1 << 2); // TIM4EN

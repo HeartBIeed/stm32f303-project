@@ -27,26 +27,15 @@ void Encoder_Test(){
 int main(void){
 
 PLL_72MHz_enable();
-//SystemClock_HSE_8MHz();
 SysTick_init();
 
 GPIO_init();
 USART1_init(9600);
-	USART1_sendStr("USART EN \n\r");
 SPI1_init();
-	USART1_sendStr("SPI INIT \n\r");
 ST7735_init();
-	USART1_sendStr("ST7735 INIT \n\r");
-
-	ST7735_FillRect(0,0, 128, 160, 0x0000);
-	ST7735_DrawString(3,3, "ST7735 INIT", 0xFFFF);
-
+Encoder_init();
 RTC_init();
-	USART1_sendStr("RTC INIT \n\r");
-	ST7735_DrawString(3,17, "RTC INIT", 0xFFFF);
-
 ADC_init();
-	ST7735_DrawString(3,29, "ADC INIT", 0xFFFF);
 
 
 uint32_t start[3] = {0};
