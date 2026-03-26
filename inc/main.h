@@ -19,5 +19,6 @@
 #include "st7735.h"
 #include "rtc.h"
 #include "adc.h"
+#include "encoder.h"
 
 #endif /* MAIN_H_ */

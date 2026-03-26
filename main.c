@@ -11,6 +11,19 @@ void GPIO_init(){
 }
 
 
+void Encoder_Test(){
+
+	int32_t position = Encoder_Get_TIM4();
+	char buffer[16];  
+	sprintf(buffer, "%ld", position); 
+
+	ST7735_FillRect(10,112, 100, 10, 0x0000);
+	ST7735_DrawString(10,112,buffer, 0xFFFF);
+}
+
+
+
+
 int main(void){
 
 PLL_72MHz_enable();
@@ -44,11 +57,18 @@ uint8_t screen_state = 0;
 	USART_commands();
 	USART1_echo();
 //	_delay_ms(300);
+ 
 
 
+// Тест энкодера с выводом на дисплей
+ if (ms_ticks - start[3] >= 200)
+	{
+	start[3] = ms_ticks;
+	Encoder_Test(); 
+	}
+		
 
-
-
+// Вывод  АЦП и температуры на дисплей
 	if (ms_ticks - start[2] >= 1000)
 	{
 	start[2] = ms_ticks;
@@ -60,14 +80,22 @@ uint8_t screen_state = 0;
 
 	char string[32];
 	sprintf(string, "ADC: %lu mV",data_adc);
-	ST7735_DrawString(3,82, string, 0xFFFF);
+	ST7735_DrawString(3,82, string, 0xFFFF); // ADC
+
+		sprintf(string, "ADC: %lu \r\n",data_adc);
+		USART1_sendStr(string);
 
 	sprintf(string, "T: %lu *C",data_temp);
-	ST7735_DrawString(10,92, string, 0xFFFF);
+	ST7735_DrawString(10,92, string, 0xFFFF); // temperature
+
+		sprintf(string, "T: %lu \r\n",data_temp);
+		USART1_sendStr(string);
+
 	}
 
 
-
+// Вывод отладочных квадратов 1Гц на дисплей
+// и времени с РТС
 	if (ms_ticks - start[1] >= 1000)
 	{
 	start[1] = ms_ticks;
@@ -92,7 +120,7 @@ uint8_t screen_state = 0;
 	}
 
 
-
+// блинкер на РС13 1Гц
 if (ms_ticks - start[0] >= 1000) 
 	{
 		GPIOC->ODR ^= (1 << 13);

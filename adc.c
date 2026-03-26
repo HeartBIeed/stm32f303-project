@@ -1,6 +1,6 @@
 #include "adc.h"
 
-// PBO ADC3 IN12
+// пин  PBO/ модуль ADC3/ канал IN12
 void ADC_init(){
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN; 
 	RCC->AHBENR |= (1<<29); //ADC34 EN
@@ -29,9 +29,9 @@ ADC3->SMPR2 &= ~(7<<6);
 //Bits 29:3 SMPx[2:0]: Channel x sampling time selection
 ADC3->SMPR2 |= (0b100<<6); //100 19.5 ADC clock cycles
 
-ADC3->SQR1 &= ~(7<<0); //0000: 1 conversion
-ADC3->SQR1 |= (12<<6); //num channel (12)
-
+ADC3->SQR1 &= ~(7<<0); //0000: 1 conversion / 1 измерение 
+ADC3->SQR1 |= (12<<6); //num channel (12) / номер канала 1 измерения в очереди
+// SQR+номер в очереди измерения
 
 ADC3->CFGR |= (1<<13); //1: Continuous conversion mode
 //Bit 13 CONT: Single / continuous conversion mode for regular conversions
@@ -42,7 +42,7 @@ ADC3->CR |= (1<<2); //AD start
 }
 
 
-uint16_t ADC_read(){
+uint32_t ADC_read(){
 
 	int timeout = 1000000;
 
