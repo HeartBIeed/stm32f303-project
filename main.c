@@ -38,6 +38,9 @@ RTC_init();
 ADC_init();
 
 
+ST7735_FillRect(0,0, 128, 160, 0x0000); // фоновая заливка
+
+
 uint32_t start[3] = {0};
 uint8_t screen_state = 0;
 

@@ -7,7 +7,7 @@
 void Encoder_init(){
 
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN; 
-	RCC->AHBENR |= (1 << 2); // TIM4EN
+	RCC->APB1ENR |= (1 << 2); // TIM4EN
 
 	GPIOB->MODER &= ~(3 << (PB6*2)); // clear PB6 
 	GPIOB->MODER |=(2 << (PB6*2)); // AF PB6
