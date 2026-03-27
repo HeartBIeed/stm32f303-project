@@ -81,7 +81,7 @@ void print_Time(){
 RTC_getTime(&hour,&min,&sec);
 char text[20]={"\0"};	
 sprintf(text, "TIME %02d:%02d:%02d \r\n",hour,min,sec);
-ST7735_DrawString(3,72, text, 0xFFFF);
+ST7735_DrawString(3,3, text, 0xFFFF);
 
 }
 
