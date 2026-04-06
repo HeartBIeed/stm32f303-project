@@ -7,6 +7,7 @@
 //PB7 TIM4_CH2 
 //ALT F NO4
 
+#define PB5 5 // BUTTON
 #define PB6 6
 #define PB7 7
 

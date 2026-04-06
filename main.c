@@ -17,8 +17,8 @@ void Encoder_Test(){
 	char buffer[16];  
 	sprintf(buffer, "%ld", position); 
 
-	ST7735_FillRect(10,33, 100, 10, 0x0000);
-	ST7735_DrawString(10,33,buffer, 0xFFFF);
+	ST7735_FillRect(10,13, 100, 10, 0x0000);
+	ST7735_DrawString(10,13,buffer, 0xFFFF);
 }
 
 //**********************************************
@@ -34,18 +34,18 @@ typedef enum {
 
 void MENU_Encoder(){
 
-static int32_t old_position =0;
-int32_t new_position =  Encoder_Get_TIM4();
+static int old_position =0;
+int new_position =  Encoder_Get_TIM4();
 static uint8_t y;
 static State_Menu state = START;
 
-
- if (new_position  > old_position)
+	if (new_position  > old_position)
 	{
-		state = UP;
+	state = UP;
+
 	} else if (new_position  < old_position) {
 
-		state = DOWN;
+	state = DOWN;
 	} 
 
 switch(state) {
@@ -65,7 +65,7 @@ switch(state) {
 	ST7735_FillRect(10,y, 10, 10, 0x0000);
 
 	y = y - 10;
-	if (y < 80) y = 140;
+	if (y < 80) y = 80;
 
 	ST7735_FillRect(10,y, 10, 10, 0x0FF0);
 
@@ -76,7 +76,7 @@ switch(state) {
     ST7735_FillRect(10,y, 10, 10, 0x0000);
 
 	y = y + 10;
-	if (y > 140) y = 80;
+	if (y > 140) y = 140;
 
 	ST7735_FillRect(10,y, 10, 10, 0x0FF0);
 
@@ -100,13 +100,13 @@ SPI1_init();
 ST7735_init();
 Encoder_init();
 RTC_init();
-ADC_init();
-
+//ADC_init();
+I2C_init();
 
 ST7735_FillRect(0,0, 128, 160, 0x0000); // фоновая заливка
 
 
-uint32_t start[3] = {0};
+uint32_t start[4] = {0};
 uint8_t screen_state = 0;
 
  while(1)
@@ -117,8 +117,24 @@ uint8_t screen_state = 0;
  
 MENU_Encoder();
 
+ /*if (ms_ticks - start[4] >= 1000)
+	{
+	start[4] = ms_ticks;
+	I2C_scan();
+	}
+		
+*/
+
+
+ if (ms_ticks - start[2] >= 10000)
+	{
+	start[2] = ms_ticks;
+	I2C_scan();
+	USART1_sendStr("\r\n end scan\r\n ");
+	}
+
 // Тест энкодера с выводом на дисплей
- if (ms_ticks - start[3] >= 200)
+ if (ms_ticks - start[3] >= 100)
 	{
 	start[3] = ms_ticks;
 	Encoder_Test(); 
@@ -126,7 +142,7 @@ MENU_Encoder();
 		
 
 // Вывод  АЦП и температуры на дисплей
-	if (ms_ticks - start[2] >= 1000)
+/*	if (ms_ticks - start[2] >= 1000)
 	{
 	start[2] = ms_ticks;
 
@@ -149,7 +165,7 @@ MENU_Encoder();
 		USART1_sendStr(string);
 
 	}
-
+*/
 
 // Вывод отладочных квадратов 1Гц на дисплей
 // и времени с РТС
