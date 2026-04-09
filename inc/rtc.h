@@ -7,7 +7,7 @@ void RTC_init();
 void RTC_setTime(uint8_t h,uint8_t m);
 void RTC_getTime(uint8_t *hour,uint8_t *min,uint8_t *sec);
 void RTC_alarmSec();
-void print_Time();
+//void print_Time();
 
 extern volatile uint8_t hour;
 extern volatile uint8_t min;

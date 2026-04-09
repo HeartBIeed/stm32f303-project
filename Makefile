@@ -22,7 +22,7 @@ CFLAGS = -mcpu=$(MCPU) -g3 --specs=nano.specs -mthumb -mfloat-abi=soft -Wall \
 all: build/$(TARGET).hex
 
 build/%.o: %.c | build
-	$(CC) $(CFLAGS) -c -O0 -ffunction-sections -fdata-sections -fstack-usage -o $@ $<
+	$(CC) $(CFLAGS) -c -Os -ffunction-sections -fdata-sections -fstack-usage -o $@ $<
 
 # system_stm32f4xx.c 
 $(SYS_OBJ): $(SYS_SRC)
@@ -35,8 +35,8 @@ $(STARTUP).o: $(ST_INCL)/$(STARTUP).s | build
 build/$(TARGET).elf: $(OBJ) $(SYS_OBJ) $(STARTUP).o $(LOADER)
 	$(CC) -o $@ $(OBJ) $(SYS_OBJ) $(STARTUP).o -mcpu=$(MCPU) \
 	--specs=nosys.specs -T"$(LOADER)" -Wl,-Map=build/$(TARGET).map \
-	-Wl,--gc-sections -static -mfloat-abi=soft -mthumb \
-	-Wl,--start-group -lc -lm -Wl,--end-group
+	-Wl,--gc-sections  --specs=nano.specs -mfloat-abi=soft -mthumb \
+	-Wl,--start-group -lc -lm -Wl,--end-group 
 	arm-none-eabi-size $@
 
 build/$(TARGET).hex: build/$(TARGET).elf

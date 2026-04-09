@@ -29,10 +29,9 @@ void I2C_init(){
 //	I2C1->CR1 |= (1<<2); // RX interrupt enable
 //	I2C1->CR1 |= (1<<1); // TX interrupt enable
 	
-	I2C1->TIMINGR = (0x1<<28)|(0x4<<20)|(0x2<<16)|(0x0F<<8)|(0x13<<0);
+	I2C1->TIMINGR = (0x7<<28)|(0x4<<20)|(0x1<<16)|(0x24<<8)|(0x2D<<0);
 // PRESC | SCLDEL | SDADEL | SCLH | SCLL 
-//table 75 from RM
-//setup for fcpu 8MHz / i2c clk 100 kHz
+//setup for fcpu 72MHz / i2c clk 100 kHz
 
 	I2C1->CR1 |= (1<<0); // PE
 }
@@ -47,14 +46,14 @@ void I2C_writeByte(int addr,uint8_t* data,int nbytes){
 	I2C1->CR2 |= (addr << 1); // set slave address
 	I2C1->CR2 |= (1 << 13); //start 
 
-	while (!(I2C1->ISR & I2C_ISR_TXIS)); //txis 1 - txdr empty
+	while (!(I2C1->ISR & I2C_ISR_TXIS));//txis 1 - txdr empty
 
-		for (int i = 0; i < nbytes; ++i)
-		{
-			while (!(I2C1->ISR & I2C_ISR_TXIS)); //wait empty tx buffer
-			I2C1->TXDR = data[i];// send 
+	for (int i = 0; i < nbytes; ++i)
+	{
+	while (!(I2C1->ISR & I2C_ISR_TXIS)); //wait empty tx buffer
+	I2C1->TXDR = data[i];// send 
 
-		}
+	}
 
 	while (!(I2C1->ISR & I2C_ISR_STOPF)); //wait stop
 	I2C1->ICR = I2C_ICR_STOPCF; //clear 
@@ -119,17 +118,20 @@ int I2C_checkAddress(int addr){
 
 void I2C_scan(){
 
-	int addr;
-	char data[32];
+	uint32_t addr;
+	char str[10];
+	
+	USART1_sendStr("I2C Start Scan \n\r");
 
 	for (addr = 0x08; addr < 0x78; addr++)
 	{
 		if (I2C_checkAddress(addr)) 
 		{
-			sprintf(data,"I2C get: 0x%02X \r\n",addr); 
-			USART1_sendStr(data);
-		} else {
-			USART1_sendStr("I2C none device \n\r");
-		}
+			USART1_sendStr("\n\r I2C FIND:");
+			itoa(addr,str,16);
+			USART1_sendStr(str);
+		} 
 	}
+
+	USART1_sendStr("\n\r I2C End Scan \n\r");
 }

@@ -88,6 +88,7 @@ switch(state) {
 old_position = new_position;
 }
 
+
 // ***************** main *****************
 int main(void){
 
@@ -100,7 +101,7 @@ SPI1_init();
 ST7735_init();
 Encoder_init();
 RTC_init();
-//ADC_init();
+ADC_init();
 I2C_init();
 
 ST7735_FillRect(0,0, 128, 160, 0x0000); // фоновая заливка
@@ -117,20 +118,12 @@ uint8_t screen_state = 0;
  
 MENU_Encoder();
 
- /*if (ms_ticks - start[4] >= 1000)
-	{
-	start[4] = ms_ticks;
-	I2C_scan();
-	}
-		
-*/
 
 
- if (ms_ticks - start[2] >= 10000)
+ if (ms_ticks - start[2] >= 7000)
 	{
 	start[2] = ms_ticks;
 	I2C_scan();
-	USART1_sendStr("\r\n end scan\r\n ");
 	}
 
 // Тест энкодера с выводом на дисплей
@@ -139,7 +132,7 @@ MENU_Encoder();
 	start[3] = ms_ticks;
 	Encoder_Test(); 
 	}
-		
+
 
 // Вывод  АЦП и температуры на дисплей
 /*	if (ms_ticks - start[2] >= 1000)
@@ -191,7 +184,6 @@ MENU_Encoder();
 
 		}
 	}
-
 
 // блинкер на РС13 1Гц
 if (ms_ticks - start[0] >= 1000) 

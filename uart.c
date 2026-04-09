@@ -112,7 +112,7 @@ int USART_commands(){
 
 
 		char string[32];
-		sprintf(string, "SET TIME -> %2d:%2d \r\n",h,m);
+		sprintf(string, "SET TIME -> %2d:%2d \r\n",h,m);///!!!!!!!!
 		USART1_sendStr(string);
 	 	usart_data_buffer[0] = '\0';
 
@@ -121,5 +121,5 @@ int USART_commands(){
 	} else {
 			return 0;
 	}
-		
+	
 }

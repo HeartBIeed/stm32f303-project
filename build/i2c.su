@@ -1,5 +1,5 @@
-i2c.c:5:6:I2C_init	4	static
-i2c.c:41:6:I2C_writeByte	32	static
-i2c.c:63:6:I2C_readByte	32	static
-i2c.c:84:5:I2C_checkAddress	16	static
-i2c.c:120:6:I2C_scan	48	static
+i2c.c:5:6:I2C_init	0	static
+i2c.c:40:6:I2C_writeByte	12	static
+i2c.c:62:6:I2C_readByte	16	static
+i2c.c:83:5:I2C_checkAddress	8	static
+i2c.c:119:6:I2C_scan	32	static
