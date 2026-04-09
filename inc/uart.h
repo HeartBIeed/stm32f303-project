@@ -17,7 +17,7 @@ void USART1_sendByte(char tx_data); // отправка байта
 void USART1_sendStr(char *str); // отправка строки - принимаем строковый массив
 void USART1_IRQHandler(); // обработчик прерывания
 void USART1_echo();
-//int USART_commands();
+int USART_commands();
 
 extern volatile uint8_t usart_data_buffer[32]; //буффер uart
 extern volatile uint8_t usart_index_buffer;

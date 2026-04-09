@@ -66,3 +66,31 @@ start[0] = ms_ticks;
  uint32_t timeout = 10000;
     while(!(RTC->ISR & RTC_ISR_RSF)) {
         if(--timeout == 0) break; // Защита от зависания
+
+		*******************************************
+
+// Вывод  АЦП и температуры на дисплей
+/*	if (ms_ticks - start[2] >= 1000)
+	{
+	start[2] = ms_ticks;
+
+	ST7735_FillRect(0,13, 120, 40, 0x0000);
+
+	uint32_t data_adc = ADC_read()*3300/4095;
+	uint32_t data_temp = (data_adc - 907)/15;
+
+	char string[32];
+	sprintf(string, "ADC: %lu mV",data_adc);
+	ST7735_DrawString(3,13, string, 0xFFFF); // ADC
+
+		sprintf(string, "ADC: %lu \r\n",data_adc);
+		USART1_sendStr(string);
+
+	sprintf(string, "T: %lu *C",data_temp);
+	ST7735_DrawString(10,23, string, 0xFFFF); // temperature
+
+		sprintf(string, "T: %lu \r\n",data_temp);
+		USART1_sendStr(string);
+
+	}
+*/

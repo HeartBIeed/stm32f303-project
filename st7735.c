@@ -150,15 +150,38 @@ int ST7735_DrawPixel(uint16_t x, uint16_t y, uint16_t color) {
 }
 
 
-void ST7735_DrawChar(uint16_t x, uint16_t y, char c, uint16_t color) {
+void ST7735_DrawChar(uint16_t x, uint16_t y, char c, uint16_t color,uint8_t font) {
 
-    const uint8_t* char_data = font8x8[(int)c];
+    const uint8_t* char_data;
+    int row_max;
+    int col_max;
+
+	if (font == 1 ){
+
+	char_data = font8x16[(int)c];
+	row_max = 16;
+	col_max = 8;
+	} 
+	
+	if (font == 2 ){
+
+	char_data = font5x8[(int)c];
+	row_max = 8;
+	col_max = 5;
+	} else {
+
+	char_data = font8x8[(int)c];
+	row_max = 8;
+	col_max = 8;
+	}
+
+
 
     // Проходим по всем 8 строкам
-    for (int row = 0; row < 8; row++) {
+    for (int row = 0; row < row_max; row++) {
         uint8_t row_data = char_data[row];
             // Проходим по всем 8 стлбцам
-		for (int col = 0; col < 8; col++){
+		for (int col = 0; col < col_max; col++){
 
 			if (row_data & (0x80 >> col)){ //0x80 - 0b10000000
              // Рисуем пиксель, если бит = 1
@@ -168,14 +191,14 @@ void ST7735_DrawChar(uint16_t x, uint16_t y, char c, uint16_t color) {
 	} //end for 1	
 }
 
-void ST7735_DrawString(uint16_t x, uint16_t y, const char* str, uint16_t color) {
+void ST7735_DrawString(uint16_t x, uint16_t y, const char* str, uint16_t color,uint8_t font) {
 CS_low();
 
     uint16_t cursor_x = x;
 
     while (*str) {
 
-        ST7735_DrawChar(cursor_x, y, *str, color);
+        ST7735_DrawChar(cursor_x, y, *str, color,font);
         cursor_x += 8;  // Ширина символа
 
         // Проверка выхода за границу экрана

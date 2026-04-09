@@ -11,4 +11,4 @@ st7735.c:80:5:ST7735_FillRect	32	static
 st7735.c:120:6:ST7735_SetRegion	24	static
 st7735.c:140:5:ST7735_DrawPixel	16	static
 st7735.c:153:6:ST7735_DrawChar	48	static
-st7735.c:171:6:ST7735_DrawString	24	static
+st7735.c:194:6:ST7735_DrawString	40	static

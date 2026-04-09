@@ -18,7 +18,7 @@ void Encoder_Test(){
 	sprintf(buffer, "%ld", position); 
 
 	ST7735_FillRect(10,13, 100, 10, 0x0000);
-	ST7735_DrawString(10,13,buffer, 0xFFFF);
+	ST7735_DrawString(10,13,buffer, 0xFFFF,0);
 }
 
 //**********************************************
@@ -106,7 +106,6 @@ I2C_init();
 
 ST7735_FillRect(0,0, 128, 160, 0x0000); // фоновая заливка
 
-
 uint32_t start[4] = {0};
 uint8_t screen_state = 0;
 
@@ -116,80 +115,44 @@ uint8_t screen_state = 0;
 	USART1_echo();
 //	_delay_ms(300);
  
-MENU_Encoder();
+	MENU_Encoder();
 
+ if (ms_ticks - start[2] >= 7000){
 
-
- if (ms_ticks - start[2] >= 7000)
-	{
 	start[2] = ms_ticks;
 	I2C_scan();
 	}
 
 // Тест энкодера с выводом на дисплей
- if (ms_ticks - start[3] >= 100)
-	{
+ if (ms_ticks - start[3] >= 100){
+
 	start[3] = ms_ticks;
 	Encoder_Test(); 
 	}
 
-
-// Вывод  АЦП и температуры на дисплей
-/*	if (ms_ticks - start[2] >= 1000)
-	{
-	start[2] = ms_ticks;
-
-	ST7735_FillRect(0,13, 120, 40, 0x0000);
-
-	uint32_t data_adc = ADC_read()*3300/4095;
-	uint32_t data_temp = (data_adc - 907)/15;
-
-	char string[32];
-	sprintf(string, "ADC: %lu mV",data_adc);
-	ST7735_DrawString(3,13, string, 0xFFFF); // ADC
-
-		sprintf(string, "ADC: %lu \r\n",data_adc);
-		USART1_sendStr(string);
-
-	sprintf(string, "T: %lu *C",data_temp);
-	ST7735_DrawString(10,23, string, 0xFFFF); // temperature
-
-		sprintf(string, "T: %lu \r\n",data_temp);
-		USART1_sendStr(string);
-
-	}
-*/
-
 // Вывод отладочных квадратов 1Гц на дисплей
 // и времени с РТС
-	if (ms_ticks - start[1] >= 1000)
-	{
+	if (ms_ticks - start[1] >= 1000){
+
 	start[1] = ms_ticks;
 	screen_state ^= 1;
 
-		if (screen_state) 	
-		{
+		if (screen_state){
 
 		ST7735_FillRect(108,140, 20, 20, 0xF800); // red
-
-		ST7735_FillRect(40,3, 80, 10, 0x0000); // clear time black 
 		print_Time();
-
 		} else {
 
-		ST7735_FillRect(108,140, 20, 20, 0x00FF); // blue
-
-		ST7735_FillRect(40,3, 80, 10, 0x0000); // clear time black 
+		ST7735_FillRect(108,140, 20, 20, 0x00FF); // blue 
 		print_Time();
-
 		}
 	}
 
 // блинкер на РС13 1Гц
-if (ms_ticks - start[0] >= 1000) 
-	{
-		GPIOC->ODR ^= (1 << 13);
-		start[0] = ms_ticks;
+if (ms_ticks - start[0] >= 1000){
+
+	GPIOC->ODR ^= (1 << 13);
+	start[0] = ms_ticks;
 	}
 
 
