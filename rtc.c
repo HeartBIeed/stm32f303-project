@@ -78,11 +78,11 @@ void RTC_getTime(uint8_t *hour,uint8_t *min,uint8_t *sec){
 
 void print_Time(){
 	
-ST7735_FillRect(40,3, 80, 10, 0x0000); // clear time black 
+ST7735_FillRect(30,3, 128, 13, BLACK); // clear time black 
 RTC_getTime(&hour,&min,&sec);
 char text[20]={"\0"};	
 sprintf(text, "TIME %02d:%02d:%02d \r\n",hour,min,sec);
-ST7735_DrawString(3,3, text, 0xFFFF,1);
+ST7735_DrawString(3,3, text,GREEN,Font_7x10);
 
 }
 
