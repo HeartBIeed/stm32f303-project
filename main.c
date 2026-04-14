@@ -11,82 +11,26 @@ void GPIO_init(){
 }
 
 
-void Encoder_Test(){
 
-	int32_t position = Encoder_Get_TIM4();
+void EXINT_Test(){
+
 	char buffer[16];  
-	sprintf(buffer, "%ld", position); 
+	sprintf(buffer, "%ld", count); 
 
-	ST7735_FillRect(10,23, 100, 18, BLACK);
-	ST7735_DrawString(10,23,buffer, MAGENTA,Font_11x18);
+	ST7735_FillRect(50,30, 100, 18, BLACK);
+	ST7735_DrawString(50,30,buffer, MAGENTA,Font_7x10);
 }
 
-//**********************************************
+void W25Q_printID(){
 
+	char buffer[32];  
+	sprintf(buffer, "%ld",  W25Q_ReadID()); 
 
-typedef enum {
-	START,
-	IDLE,
-	UP,
-	DOWN
-} State_Menu;
+	ST7735_FillRect(30,100, 100, 18, BLACK);
+	ST7735_DrawString(30,100,buffer, RED,Font_7x10);
 
-
-void MENU_Encoder(){
-
-static int old_position =0;
-int new_position =  Encoder_Get_TIM4();
-static uint8_t y;
-static State_Menu state = START;
-
-	if (new_position  > old_position)
-	{
-	state = UP;
-
-	} else if (new_position  < old_position) {
-
-	state = DOWN;
-	} 
-
-switch(state) {
-    case START:
-	y = 80;
-	ST7735_FillRect(10,y, 10, 10, YELLOW);
-
-    state = IDLE;
-    break;
-//-----------------------------------
-
-    case IDLE:
-
-    break;
-//-----------------------------------
-    case UP:
-	ST7735_FillRect(10,y, 10, 10, BLACK);
-
-	y = y - 10;
-	if (y < 80) y = 80;
-
-	ST7735_FillRect(10,y, 10, 10, YELLOW);
-
-    state = IDLE;
-    break;
-//-----------------------------------
-    case DOWN:
-    ST7735_FillRect(10,y, 10, 10, BLACK);
-
-	y = y + 10;
-	if (y > 140) y = 140;
-
-	ST7735_FillRect(10,y, 10, 10, YELLOW);
-
-    state = IDLE;
-    
-    break;
-	}
-
-old_position = new_position;
 }
+
 
 
 // ***************** main *****************
@@ -101,14 +45,16 @@ SPI1_init();
 ST7735_init();
 Encoder_init();
 RTC_init();
-ADC_init();
+//ADC_init();
 I2C_init();
+EXTI_init();
 
 ST7735_FillRect(0,0, 128, 160, BLACK); // фоновая заливка
-ST7735_DrawString(40, 50,"Hello",CYAN,Font_16x26);
-bresenhamCircle(40, 140, 10, RED);
-bresenhamCircle(40, 40, 20, RED);
-bresenhamCircle(3, 50, 15, RED);
+bresenhamCircleFill(40, 140, 10, RED);
+
+	_delay_ms(10);
+W25Q_printID();
+	_delay_ms(10);
 
 uint32_t start[4] = {0};
 uint8_t screen_state = 0;
@@ -121,6 +67,10 @@ uint8_t screen_state = 0;
  
 	MENU_Encoder();
 
+
+
+	
+
  if (ms_ticks - start[2] >= 7000){
 
 	start[2] = ms_ticks;
@@ -132,6 +82,7 @@ uint8_t screen_state = 0;
 
 	start[3] = ms_ticks;
 	Encoder_Test(); 
+	EXINT_Test();
 	}
 
 // Вывод отладочных квадратов 1Гц на дисплей

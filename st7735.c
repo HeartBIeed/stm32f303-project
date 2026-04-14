@@ -172,7 +172,9 @@ void ST7735_DrawChar(uint16_t x, uint16_t y, char c, ST7735_Color color,FontDef 
 	} //end for 1	
 }
 
-void ST7735_DrawString(uint16_t x, uint16_t y, const char* str, ST7735_Color color,FontDef font) {
+void ST7735_DrawString(uint16_t x, uint16_t y, 
+						const char* str, ST7735_Color color,
+						FontDef font) {
 
 CS_low();
 
@@ -194,29 +196,114 @@ CS_low();
 CS_high(); 
 }
 
+void ST7735_DrawLine(int16_t x0, int16_t y0,
+                     int16_t x1, int16_t y1,
+                     ST7735_Color color)
+{
+    int16_t dx = abs(x1 - x0);
+    int16_t step_x = (x0 < x1) ? 1 : -1; // шаг по х
 
-void bresenhamCircle(int16_t x0, int16_t y0, int16_t radius, ST7735_Color color) {
-int16_t x = 0;
-int16_t y = radius;
-int16_t d = 3 - 2 * radius; // Начальное значение параметра принятия решения
+    int16_t dy = -abs(y1 - y0);
+    int16_t step_y = (y0 < y1) ? 1 : -1; // шаг по у
 
-while (y >= x) {
-// Используем симметрию окружности для отрисовки точек во всех октантах
-ST7735_DrawPixel(x0 + x, y0 + y,color);
-ST7735_DrawPixel(x0 + y, y0 + x,color);
-ST7735_DrawPixel(x0 - y, y0 + x,color);
-ST7735_DrawPixel(x0 - x, y0 + y,color);
-ST7735_DrawPixel(x0 - x, y0 - y,color);
-ST7735_DrawPixel(x0 - y, y0 - x,color);
-ST7735_DrawPixel(x0 + y, y0 - x,color);
-ST7735_DrawPixel(x0 + x, y0 - y,color);
+    int16_t err = dx + dy; // ошибка - отклонение
 
-if (d < 0) {
-d += 4 * x + 6;
-} else {
-d += 4 * (x - y) + 10;
-y--;
+    CS_low();
+
+    while (1)
+    {
+        ST7735_DrawPixel(x0, y0, color);
+
+        if (x0 == x1 && y0 == y1)
+            break;
+
+        int16_t e2 = 2 * err;
+
+        if (e2 >= dy)
+        {
+            err += dy;
+            x0 += step_x;
+        }
+
+        if (e2 <= dx)
+        {
+            err += dx;
+            y0 += step_y;
+        }
+    }
+
+    CS_high();
 }
-x++;
+
+
+
+
+
+void bresenhamCircle(int16_t x0, int16_t y0, int16_t radius, ST7735_Color color){
+
+	int16_t x = 0;
+	int16_t y = radius;
+	int16_t d = 3 - 2 * radius; // Начальное значение параметра принятия решения
+
+CS_low();
+
+	while (y >= x){
+		// Используем симметрию окружности для отрисовки точек во всех октантах
+
+		ST7735_DrawPixel(x0 + x, y0 + y,color);
+		ST7735_DrawPixel(x0 + y, y0 + x,color);
+		ST7735_DrawPixel(x0 - y, y0 + x,color);
+		ST7735_DrawPixel(x0 - x, y0 + y,color);
+		ST7735_DrawPixel(x0 - x, y0 - y,color);
+		ST7735_DrawPixel(x0 - y, y0 - x,color);
+		ST7735_DrawPixel(x0 + y, y0 - x,color);
+		ST7735_DrawPixel(x0 + x, y0 - y,color);
+
+		if (d < 0) {
+
+		d += 4 * x + 6;
+		} else {
+
+		d += 4 * (x - y) + 10;
+		y--;
+		}
+
+	x++;
+	}
+
+CS_high(); 
 }
+
+
+void bresenhamCircleFill(int16_t x0, int16_t y0, int16_t radius, ST7735_Color color)
+{
+    int16_t x = 0;
+    int16_t y = radius;
+    int16_t d = 3 - 2 * radius;
+
+//CS_low();
+
+    while (y >= x){
+        // рисуем заливку горизонтальными линиями (8 октантов)
+
+        ST7735_DrawLine(x0 - x, y0 + y, x0 + x, y0 + y, color);
+        ST7735_DrawLine(x0 - x, y0 - y, x0 + x, y0 - y, color);
+
+        ST7735_DrawLine(x0 - y, y0 + x, x0 + y, y0 + x, color);
+        ST7735_DrawLine(x0 - y, y0 - x, x0 + y, y0 - x,  color);
+
+        if (d < 0){
+
+        d += 4 * x + 6;
+        } else {
+        
+        d += 4 * (x - y) + 10;
+        y--;
+
+        }
+
+    x++;
+    }
+
+//CS_high();
 }

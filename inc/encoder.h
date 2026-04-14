@@ -11,7 +11,16 @@
 #define PB6 6
 #define PB7 7
 
+typedef enum {
+	START,
+	IDLE,
+	UP,
+	DOWN
+} State_Menu;
+
 void Encoder_init();
 int32_t Encoder_Get_TIM4();
+void Encoder_Test();
+void MENU_Encoder();
 
 #endif /* ENC_H_ */

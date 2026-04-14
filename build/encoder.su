@@ -1,2 +1,4 @@
 encoder.c:7:6:Encoder_init	0	static
 encoder.c:44:9:Encoder_Get_TIM4	0	static
+encoder.c:51:6:Encoder_Test	32	static
+encoder.c:62:6:MENU_Encoder	32	static

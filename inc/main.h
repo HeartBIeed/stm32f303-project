@@ -18,8 +18,10 @@
 #include "spi.h"
 #include "st7735.h"
 #include "rtc.h"
-#include "adc.h"
+//#include "adc.h"
 #include "encoder.h"
 #include "i2c.h"
+#include "extint.h"
+#include "w25q.h"
 
 #endif /* MAIN_H_ */
