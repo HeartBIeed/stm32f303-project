@@ -19,9 +19,10 @@
 #include "st7735.h"
 #include "rtc.h"
 //#include "adc.h"
-#include "encoder.h"
+//#include "encoder.h"
 #include "i2c.h"
 #include "extint.h"
-#include "w25q.h"
+//#include "w25q.h"
+#include "aht20.h"
 
 #endif /* MAIN_H_ */

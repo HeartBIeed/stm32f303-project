@@ -18,7 +18,7 @@ void I2C_scan();
 // PB8 - SCL
 // PB9 - SDA
 
-#define TIMEOUT 10000
+#define TIMEOUT 1000000
 
 #define SCL 8
 #define SDA 9

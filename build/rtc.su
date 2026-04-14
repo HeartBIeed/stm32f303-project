@@ -1,4 +1,4 @@
 rtc.c:7:6:RTC_init	8	static
 rtc.c:47:6:RTC_setTime	12	static
 rtc.c:69:6:RTC_getTime	12	static
-rtc.c:79:6:print_Time	56	static
+rtc.c:79:6:print_Time	64	static

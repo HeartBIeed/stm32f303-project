@@ -8,19 +8,27 @@ void I2C_init(){
 	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; // APB1 I2C1
 
 //MODER 0b10 - 0x02 alt func - 2 bit
-	GPIOB->MODER &= ~( 0x3 << (SCL *2)); // SCL  clear
-	GPIOB->MODER |= ( 0x2 << (SCL *2)); // SCL set TX
+	GPIOB->MODER &= ~( 3 << (SCL *2)); // SCL  clear
+	GPIOB->MODER |= ( 2 << (SCL *2)); // SCL set TX
 
-	GPIOB->MODER &= ~( 0x3 << (SDA *2)); // SDA  clear
-	GPIOB->MODER |= ( 0x2 << (SDA *2)); // SDA set RX
+	GPIOB->MODER &= ~( 3 << (SDA *2)); // SDA  clear
+	GPIOB->MODER |= ( 2 << (SDA *2)); // SDA set RX
 
 //OTYPER 1- Open Drain  - 1 bit 
 	GPIOB->OTYPER &= ~((1<<SCL) | (1<<SDA));
 	GPIOB->OTYPER |= ((1<<SCL )|(1<<SDA )); 
 
+
+	GPIOB->PUPDR &= ~( 3 << (SDA *2));
+	GPIOB->PUPDR |= ( 1 << (SDA *2)); 
+
+	GPIOB->PUPDR &= ~( 3 << (SCL *2));
+	GPIOB->PUPDR |= ( 1 << (SCL *2)); 
+
+
 //OSPEEDR 10 high 2 - bit
 	GPIOB->OSPEEDR &= ~((3<<(SCL*2)) | (3<<(SDA*2)));
-	GPIOB->OSPEEDR |= ((0x3<<(SCL *2))|(0x3<<(SDA *2))); 
+	GPIOB->OSPEEDR |= ((3<<(SCL *2))|(3<<(SDA *2))); 
 
 	GPIOB->AFR[1] &= ~((0xF<<((SCL-8) *4))|(0xF<<((SDA-8) *4))); // clear
 	GPIOB->AFR[1] |= ((4<<((SCL-8) *4))|(4<<((SDA-8) *4)));  //0b001/ 4 bit 
