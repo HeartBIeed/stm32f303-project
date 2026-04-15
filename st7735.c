@@ -150,11 +150,27 @@ int ST7735_DrawPixel(uint16_t x, uint16_t y, ST7735_Color color) {
 }
 
 
+
+
 void ST7735_DrawChar(uint16_t x, uint16_t y, char c, ST7735_Color color,FontDef font) {
 
-    const uint16_t* char_data = font.data + ((int)c-32)*font.height;
-// индекс символа × высота
-    
+//    const uint16_t* char_data = font.data + ((int)c-32)*font.height;
+// индекс символа × высота   
+
+const uint16_t* char_data;
+
+	if (c < 128) {
+
+		char_data = font.data + ((int)c-32)*font.height; // EN
+	} 
+
+	if (c >= 0xC0) {
+
+		char_data = font.data + ((int)c-0xC0)*font.height; // RU
+	}
+
+
+
     // Проходим по всем 8 строкам
     for (int row = 0; row < font.height; row++) {
 

@@ -4,7 +4,7 @@
 #include "main.h"
 
 
-void AHT_to_USART();		
+void AHT_output(uint8_t x, uint8_t y);
 
 
 #endif /* AHT20_H_ */

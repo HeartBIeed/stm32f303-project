@@ -10,8 +10,8 @@ st7735.c:56:6:ST7735_init	8	static
 st7735.c:80:5:ST7735_FillRect	32	static
 st7735.c:120:6:ST7735_SetRegion	24	static
 st7735.c:140:5:ST7735_DrawPixel	8	static
-st7735.c:153:6:ST7735_DrawChar	48	static
-st7735.c:175:6:ST7735_DrawString	40	static
-st7735.c:199:6:ST7735_DrawLine	64	static
-st7735.c:242:6:bresenhamCircle	64	static
-st7735.c:278:6:bresenhamCircleFill	64	static
+st7735.c:155:6:ST7735_DrawChar	48	static
+st7735.c:191:6:ST7735_DrawString	40	static
+st7735.c:215:6:ST7735_DrawLine	64	static
+st7735.c:258:6:bresenhamCircle	64	static
+st7735.c:294:6:bresenhamCircleFill	64	static

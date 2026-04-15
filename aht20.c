@@ -1,6 +1,6 @@
 #include "aht20.h"
 
-void AHT_to_USART(){
+void AHT_output(uint8_t x, uint8_t y){
 
 	uint8_t init_aht20[3] = {0xBE,0x08,0x00};
 	uint8_t trig[3] = {0xAC, 0x33, 0x00};
@@ -12,9 +12,11 @@ void AHT_to_USART(){
 		{
 
 			USART1_sendStr("AHT EN\n\r");
+			ST7735_DrawString(110,3, "X",BLACK,Font_11x18);
+
 		} else {
 			USART1_sendStr("I2C none 0x38\n\r");
-			ST7735_DrawString(20,43, "AHT NONE",RED,Font_11x18);
+			ST7735_DrawString(110,3, "X",RED,Font_11x18);
 			return;
 		}
 
@@ -44,19 +46,19 @@ static uint32_t Temp_old;
 if (!(Humi_old == Humi)){
 
 	sprintf(string,"Humi: %lu %%",Humi_old);
-	ST7735_DrawString(3,30, string,BLACK,Font_11x18);
+	ST7735_DrawString(x,y, string,BLACK,Font_11x18);
 
 	sprintf(string,"Humi: %lu %%",Humi);
-	ST7735_DrawString(3,30, string,GREEN,Font_11x18);
+	ST7735_DrawString(x,y, string,GREEN,Font_11x18);
 }
 
 if (!(Temp_old == Temp)){
 
 	sprintf(string,"Temp: %lu *C",Temp_old);
-	ST7735_DrawString(3,55, string,BLACK,Font_11x18);
+	ST7735_DrawString(x,y+25, string,BLACK,Font_11x18);
 
 	sprintf(string,"Temp: %lu *C",Temp);
-	ST7735_DrawString(3,55, string,GREEN,Font_11x18);
+	ST7735_DrawString(x,y+25, string,GREEN,Font_11x18);
 }
 
 Humi_old = Humi;

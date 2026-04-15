@@ -11,6 +11,8 @@
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 160
 
+#define EN 32
+#define RU 0xC0
 
 void ST7735_init();
 int ST7735_FillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ST7735_Color color);

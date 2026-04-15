@@ -24,5 +24,6 @@
 #include "extint.h"
 //#include "w25q.h"
 #include "aht20.h"
+#include "gcounter.h"
 
 #endif /* MAIN_H_ */
